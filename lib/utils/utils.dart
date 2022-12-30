@@ -4,6 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
 class Utils {
+  static fieldFocusChange(BuildContext context, FocusNode currentFocusNode,
+      FocusNode nextFocusNode) {
+    FocusScope.of(context).requestFocus(nextFocusNode);
+  }
+
   static toastMassage(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -34,7 +39,7 @@ class Utils {
   static snackBar(BuildContext context, String message) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message.toString()),
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
     ));
   }
 }

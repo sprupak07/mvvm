@@ -1,33 +1,35 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mvvm/res/components/round_button.dart';
-import 'package:mvvm/view_model/auth_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../res/components/round_button.dart';
 import '../utils/routes/routes_name.dart';
 import '../utils/utils.dart';
+import '../view_model/auth_view_model.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  final ValueNotifier<bool> _obsecurePassword = ValueNotifier<bool>(true);
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passController = TextEditingController();
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passFocusNode = FocusNode();
+class _SignUpViewState extends State<SignUpView> {
+  final GlobalKey<FormState> _signupFormKey = GlobalKey<FormState>();
+  ValueNotifier<bool> _obsecurePassword = ValueNotifier<bool>(true);
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passController.dispose();
-    _emailFocusNode.dispose();
-    _passFocusNode.dispose();
+    _passwordController.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
     _obsecurePassword.dispose();
     super.dispose();
   }
@@ -36,11 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
     final height = MediaQuery.of(context).size.height * 1;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
-          key: _loginFormKey,
+          key: _signupFormKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -57,10 +60,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                focusNode: _emailFocusNode,
+                focusNode: emailFocusNode,
                 keyboardType: TextInputType.emailAddress,
                 onFieldSubmitted: (value) => Utils.fieldFocusChange(
-                    context, _emailFocusNode, _passFocusNode),
+                    context, emailFocusNode, passwordFocusNode),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email),
@@ -72,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 valueListenable: _obsecurePassword,
                 builder: (BuildContext context, value, child) {
                   return TextFormField(
-                    controller: _passController,
-                    focusNode: _passFocusNode,
+                    controller: _passwordController,
+                    focusNode: passwordFocusNode,
                     obscureText: _obsecurePassword.value,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -107,12 +110,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   width: 200,
                   onPressed: () {
-                    if (_loginFormKey.currentState!.validate()) {
+                    if (_signupFormKey.currentState!.validate()) {
                       Map data = {
                         'email': _emailController.text.toString(),
-                        'password': _passController.text.toString(),
+                        'password': _passwordController.text.toString(),
                       };
-                      authViewModel.loginApi(
+
+                      authViewModel.registerApi(
                         data,
                         context,
                       );
@@ -121,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     }
                   },
-                  title: 'Login',
+                  title: 'SignUp',
                 ),
               ),
               SizedBox(
@@ -129,9 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, RoutesName.signUp);
+                    Navigator.pushNamed(context, RoutesName.login);
                   },
-                  child: const Text("Dont have an account? SignUp")),
+                  child: const Text("Already have account? Login")),
             ],
           ),
         ),

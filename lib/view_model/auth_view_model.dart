@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:mvvm/utils/utils.dart';
 import '../repository/auth_repository.dart';
 
@@ -44,9 +43,18 @@ class AuthViewModel with ChangeNotifier {
   Future<dynamic> registerApi(dynamic data, BuildContext context) async {
     try {
       setLoading(true);
-      dynamic response = await _myrepo.registerApi(data);
+      dynamic response = await _myrepo.registerApi(data).then((value) {
+        setLoading(false);
+
+        print(value.toString());
+
+        Utils.toastMassage("Register Successfully");
+      });
+
       return response;
     } catch (e) {
+      Utils.flushBarErrorMassage(context, e.toString());
+      setLoading(false);
       rethrow;
     }
   }

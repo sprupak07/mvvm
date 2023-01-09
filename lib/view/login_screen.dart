@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm/res/components/round_button.dart';
 import 'package:mvvm/view_model/auth_view_model.dart';
@@ -116,9 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         data,
                         context,
                       );
-                      if (kDebugMode) {
-                        print('Api Hit');
-                      }
                     }
                   },
                   title: 'Login',

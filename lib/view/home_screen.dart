@@ -17,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userPref = Provider.of<UserViewModel>(context);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Home Screen'),
       ),
       body: Column(
